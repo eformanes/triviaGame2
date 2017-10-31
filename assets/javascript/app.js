@@ -64,7 +64,7 @@ var answers = ['z','z','z','z','z'];
 var clockRunning = false;
 
 //Holds the timer.  Does nothing until game is reset.
-var windowTimeout;
+//var windowTimeout;
 
 // Used to hold the setInterval value that fires every second?
 var intervalID;
@@ -72,8 +72,13 @@ var intervalID;
 var timeRemaining = 30;
 
 function countDown(){
+	if(timeRemaining === 0){
+		endGame();
+	}
+
 	timeRemaining --;
 	$("#timeRemaining").html(timeRemaining);
+
 }
 
 
@@ -121,54 +126,79 @@ $(document).on('change', 'input', function() {
 })
 
 //clicking the End Game button is one way to end the game.
-$('#endGame').on("click", endGame);
+$('#endGameBtn').on("click", endGame);
+
+$('#resetGameBtn').on("click", resetGame);
 
 function displayQuestionsAndAnswers(){
 	
 	//Create a string that will be built and then appended too.
 	var html='';
 
+	// for(var i=0; i<questionsAndAnswers.length;i++){
+		
+
+	// 	//Dynamiclly build new Div to hold Question
+	// 	html += '<div id="question' + i + '">';
+	// 	//Dynamically Build the question
+	// 	html += '<p id="question'+ i + 'Text">' +questionsAndAnswers[i].question +'</p>';
+
+	// 	//Build the answer Form tag
+	// 	html += '<form>';
+
+		
+	// 	for(var key in questionsAndAnswers[i].answers){
+			
+	// 		html += '<input class="question' + i +'Answer" type="radio" name="'+ i + '" value="'+ key +'">' + questionsAndAnswers[i].answers[key] + '</input>';
+	// 	}
+		
+
+	// 	//Close the answer Form tag
+	// 	html += '</form>';
+
+
+	// 	//Last thing to close out the question div.
+	// 	html += '</div>';
+	// }
+
 	for(var i=0; i<questionsAndAnswers.length;i++){
 		
-
-		//Dynamiclly build new Div to hold Question
-		html += '<div id="question' + i + '">';
-		//Dynamically Build the question
-		html += '<p id="question'+ i + 'Text">' +questionsAndAnswers[i].question +'</p>';
-
-		//Build the answer Form tag
-		html += '<form>';
-
-		//Dynamically build the answer input tags using a for loop
-		//For now assume 4 answer options.  Later figure out how to count number of possible answers
-		// Object.keys(questionsAndAnswers[i].answers).length
-		// for(var j=0; Object.keys(questionsAndAnswers[i].answers).length;j++){
-		// 	$("#questionHolder").append('<input class="question>' + j +'Answer" type="radio" name="question'+ j + 'Ans" value="'+ 'Z"' + questionsAndAnswers[i].answers.A + '</input>');	
-		// }
-
-		//Loop below will go through each question's answer object and dynamically build the answer radio buttons
-		for(var key in questionsAndAnswers[i].answers){
-			//console.log(key, questionsAndAnswers[i].answers[key]);
-
-			//Console logs below to troubleshoot issues with building Radio buttons dynamically
-			// console.log(i);
-			// console.log(key);
-			// console.log(questionsAndAnswers[i].answers[key]);
-
-			//html += '<input class="question' + i +'Answer" type="radio" name="question'+ i + 'Ans" value="'+ key +'">' + questionsAndAnswers[i].answers[key] + '</input>';
-			//Made change below due to idea of using name as the index for the answers array.
-			html += '<input class="question' + i +'Answer" type="radio" name="'+ i + '" value="'+ key +'">' + questionsAndAnswers[i].answers[key] + '</input>';
-		}
-		
-
-		//Close the anser Form tag
-		html += '</form>';
-
-
-		//Last thing to close out the question div.
+		//New question card
+		html += '<div class="card border-primary">';
+		//Question Number
+		html += '<div class="card-header bg-primary" id="question' + i + '"> Question Number ' + (i+1) + '</div>';
+		//Question card body
+		html += '<div class="card-body">';
+		//Question Text row
+		html += '<div class="row">';
+		//Question Text content
+		html += '<div class="col"><p>' + questionsAndAnswers[i].question  +'</p></div>';
+		// Close out question Text Row
 		html += '</div>';
+		
+		// Begin Answers row
+		html += '<div class="row">';
+		html += '<div class="col">';
+		// Inner card to hold answers
+		html += '<div class="card">';		
+		html += '<div class="card-body">';
+
+		// build the answer radio buttons
+		for(var key in questionsAndAnswers[i].answers){
+			
+			html += '<input class="question' + i +'Answer" type="radio" name="'+ i + '" value="'+ key +'">' + questionsAndAnswers[i].answers[key] + '</input><br>';
+		}
+
+		// Close out the card body div and remaining 6 divs
+		html += '</div></div></div></div></div></div>';
+		// Add a space between each question.
+		html += '<p></p>'
+		//console.log(html);
+
+
 	}
 
+	// Append the html sting built above.
 	$("#questionHolder").append(html);
 }
 
@@ -177,9 +207,10 @@ function resetGame(){
 	answers = [];
 	displayQuestionsAndAnswers();
 	//start Timers
+	clearTimeout(intervalID);
 	timeRemaining = 30;
 	intervalID = setInterval(countDown, 1000);
-	windowTimeout = setTimeout(endGame, 30000);
+	//windowTimeout = setTimeout(endGame, 30000);
 	
 	
 }
@@ -187,17 +218,24 @@ function resetGame(){
 
 function endGame(){
 	// Clear the Timeouts if end game early
-	clearTimeout(windowTimeout);
+	//clearTimeout(windowTimeout);
 	clearTimeout(intervalID);
 
 	var correctAnswerCount = 0;
 	for(var i=0;i < questionsAndAnswers.length ;i++){
 		if (questionsAndAnswers[i].correctAnswer === answers[i]) {
 			correctAnswerCount++;
+			//Make background header of correct question cards Green
+			$("#question"+i).addClass("bg-success");
+		}
+		else{
+			//Make background header of incorrect question cards Red.
+			$("#question"+i).addClass("bg-danger");
 		}
 	}
 	alert("You got " + correctAnswerCount + " correct!");
-	resetGame();
+	alert("Answers marked in red are incorrect.  Correct answers are marked with Green.  Click Reset Game Button to play again. ");
+	//resetGame();
 }
 
 
