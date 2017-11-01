@@ -1,12 +1,12 @@
 var questionsAndAnswers = [
 	// Question 1
 	{
-		question: "What is the capital of California?",
+		question: "What does eq mean in jQuery?",
 		answers: {
-			A: "Sacramento",
-			B: "Irvine",
-			C: "San Diego",
-			D: "Torrance"
+			A: "Method that selects an element with a specific index number or matched elements.",
+			B: "Used to compare if two numbers are equal.",
+			C: "Not a valid jQuery method.",
+			D: "Used to compare if two objects are equal."
 		},
 		correctAnswer: "A"
 	},
@@ -73,11 +73,15 @@ var timeRemaining = 30;
 
 function countDown(){
 	if(timeRemaining === 0){
+		$("#timeRemaining").html(timeRemaining);
 		endGame();
 	}
 
-	timeRemaining --;
-	$("#timeRemaining").html(timeRemaining);
+	if(clockRunning){
+		timeRemaining --;
+		$("#timeRemaining").html(timeRemaining);	
+	}
+	
 
 }
 
@@ -128,6 +132,7 @@ $(document).on('change', 'input', function() {
 //clicking the End Game button is one way to end the game.
 $('#endGameBtn').on("click", endGame);
 
+//
 $('#resetGameBtn').on("click", resetGame);
 
 function displayQuestionsAndAnswers(){
@@ -209,6 +214,7 @@ function resetGame(){
 	//start Timers
 	clearTimeout(intervalID);
 	timeRemaining = 30;
+	clockRunning = true;
 	intervalID = setInterval(countDown, 1000);
 	//windowTimeout = setTimeout(endGame, 30000);
 	
@@ -219,7 +225,10 @@ function resetGame(){
 function endGame(){
 	// Clear the Timeouts if end game early
 	//clearTimeout(windowTimeout);
+	clockRunning= false;
 	clearTimeout(intervalID);
+	timeRemaining = 0;
+	$("#timeRemaining").html(timeRemaining);
 
 	var correctAnswerCount = 0;
 	for(var i=0;i < questionsAndAnswers.length ;i++){

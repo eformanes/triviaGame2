@@ -10,9 +10,26 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
 </head>
 <body>
+	<!-- Open container for navbar.  Container will hold everything -->
 	<div class="container">
-		<h1>Totally Trivial Trivia!</h1>
-		<h2>Time Remaining:  <span id="timeRemaining">30</span> Seconds!</h2>
+	<nav class="navbar sticky-top navbar-dark bg-dark">
+			<span class="navbar-text">
+				<h1>Totally Trivial Trivia!</h1>
+				<h2>Time Remaining:  <span id="timeRemaining">30</span> Seconds!</h2>
+				<button id='endGameBtn'>End Game!</button>
+				<button id='resetGameBtn'>Reset Game!</button>
+			</span>
+		</nav>
+
+	<div class="container stick">
+		<!-- Nav bar test -->
+
+		
+
+		<!-- End Nav bar test -->
+
+		<!-- <h1>Totally Trivial Trivia!</h1>
+		<h2>Time Remaining:  <span id="timeRemaining">30</span> Seconds!</h2> -->
 	</div>
 
 	<div class="container" id="questionHolder">
@@ -30,9 +47,12 @@
 
 	</div>
 
-	<div class="container">
+	<!-- <div class="container">
 		<button id='endGameBtn'>End Game!</button>
 		<button id='resetGameBtn'>Reset Game!</button>
+	</div> -->
+
+	<!-- Close overall container -->
 	</div>
 
 	<script type="text/javascript" src="assets/javascript/app.js"></script>
