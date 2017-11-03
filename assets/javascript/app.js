@@ -60,6 +60,7 @@ var questionsAndAnswers = [
 // initialize anwers array with an function later
 // For now, initialize first 5 with z.  z will mean not yet selected.
 var answers = ['z','z','z','z','z'];
+var randomizedQuestionArray = [];
 
 var clockRunning = false;
 
@@ -136,6 +137,19 @@ $('#endGameBtn').on("click", endGame);
 $('#resetGameBtn').on("click", resetGame);
 
 function displayQuestionsAndAnswers(){
+
+	var numberOfQuestions = 5;
+	randomizedQuestionArray = [];
+
+	//Create an ordered array
+	for(var j=0; j < numberOfQuestions;j++){
+		randomizedQuestionArray[j] = j;
+
+	}
+
+	//Shuffle the ordered array
+	shuffle(randomizedQuestionArray);
+
 	
 	//Create a string that will be built and then appended too.
 	var html='';
@@ -168,8 +182,13 @@ function displayQuestionsAndAnswers(){
 
 	for(var i=0; i<questionsAndAnswers.length;i++){
 		
+		// if(i=0){
+		// 	// Add a space before he first question so not touching the header
+		// 	html += '<p></p>'
+		// }
+
 		//New question card
-		html += '<div class="card border-primary">';
+		html += '<div class="card border-primary" id="questionCard'+ i +'" >';
 		//Question Number
 		html += '<div class="card-header bg-primary" id="question' + i + '"> Question Number ' + (i+1) + '</div>';
 		//Question card body
@@ -234,12 +253,14 @@ function endGame(){
 	for(var i=0;i < questionsAndAnswers.length ;i++){
 		if (questionsAndAnswers[i].correctAnswer === answers[i]) {
 			correctAnswerCount++;
-			//Make background header of correct question cards Green
+			//Make background header and border of correct question cards Green
 			$("#question"+i).addClass("bg-success");
+			$("#questionCard"+i).addClass("border-success");
 		}
 		else{
-			//Make background header of incorrect question cards Red.
+			//Make background header and border of incorrect question cards Red.
 			$("#question"+i).addClass("bg-danger");
+			$("#questionCard"+i).addClass("border-danger");
 		}
 	}
 	alert("You got " + correctAnswerCount + " correct!");
@@ -249,5 +270,24 @@ function endGame(){
 
 
 $("#startGameButton").on("click", resetGame);
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 
 //displayQuestionsAndAnswers();
