@@ -60,21 +60,23 @@ var questionsAndAnswers = [
 // initialize anwers array with an function later
 // For now, initialize first 5 with z.  z will mean not yet selected.
 var answers = ['z','z','z','z','z'];
+// Used to hold shuffled question order
 var randomizedQuestionArray = [];
 
 var clockRunning = false;
 
-//Holds the timer.  Does nothing until game is reset.
-//var windowTimeout;
 
-// Used to hold the setInterval value that fires every second?
+// Used to hold the setInterval value that fires every second
 var intervalID;
-
+// Initializes the time to answer all questions
 var timeRemaining = 30;
+
+
 
 function countDown(){
 	if(timeRemaining === 0){
 		$("#timeRemaining").html(timeRemaining);
+		//Ends game when time remaining hits 0
 		endGame();
 	}
 
@@ -88,66 +90,43 @@ function countDown(){
 
 
 
-//This looks dumb but need a way to 
-// var	valueOfA = 1;
-
-
-// var question1Ans = 'z';
-
-// $(".question1Answer").change(checkQuestion1Changed);
-
-
-// function checkQuestion1Changed(){
-// 	question1Ans = $(".question1Answer:checked").val();
-// 	console.log("Changed 1")
-// }
-
-// //$(".question0Answer").change(checkQuestion0Changed);
-// $("form").on("change", "input.question0Answer",function(){
-// 	question1Ans = $(".question0Answer:checked").val();
-// 	console.log("Change 0 live!");
-// })
-
-// function checkQuestion0Changed(){
-// 	console.log("Changed 0!");
-// }
-
-
 ///THIS WORKS on radio buttons that have been added dynamically!!
 ///Function below is used to push the answer selected to the correct answers[] array index.
 $(document).on('change', 'input', function() {
 
-	// Console logs below were for testing values that were returned
+	// Console logs below were for testing values that are detected from radio button changes
 	 console.log("Input clicked!");
 	 console.log(this.name);
 	 console.log(this.value);
 
-	//var currentAnswerIndex = parseInt(this.name);
-	
 	//Line below is the only thing required to push selected letter in the correct index.  this.name is actually a string but is auto converted into an int/number for index
 	//This only works because I took the shortcut of giving each radio button the name of the question #(starting with 0)
 	answers[this.name] = this.value;
 
 })
 
-//clicking the End Game button is one way to end the game.
+//Clicking the End Game Button is one way to end the game.
 $('#endGameBtn').on("click", endGame);
 
-//
+//Reset the game when the Reset Button is clicked
 $('#resetGameBtn').on("click", resetGame);
 
-function displayQuestionsAndAnswers(){
 
+//  Function below dynamically builds the questions cards that will be displayed
+function displayQuestionsAndAnswers(){
+	//  Enhancement:  Add the ability to change the number of questions
 	var numberOfQuestions = 5;
+	
+	//  Resets the randomized Array
 	randomizedQuestionArray = [];
 
-	//Create an ordered array
+	//Create an ordered array that will hold a unique index for each question
 	for(var j=0; j < numberOfQuestions;j++){
 		randomizedQuestionArray[j] = j;
 
 	}
 
-	//Shuffle the ordered array
+	//Shuffle the ordered array so questions will be random but not duplicated
 	shuffle(randomizedQuestionArray);
 
 
@@ -156,38 +135,11 @@ function displayQuestionsAndAnswers(){
 	//Create a string that will be built and then appended too.
 	var html='';
 
-	// for(var i=0; i<questionsAndAnswers.length;i++){
-		
-
-	// 	//Dynamiclly build new Div to hold Question
-	// 	html += '<div id="question' + i + '">';
-	// 	//Dynamically Build the question
-	// 	html += '<p id="question'+ i + 'Text">' +questionsAndAnswers[i].question +'</p>';
-
-	// 	//Build the answer Form tag
-	// 	html += '<form>';
-
-		
-	// 	for(var key in questionsAndAnswers[i].answers){
-			
-	// 		html += '<input class="question' + i +'Answer" type="radio" name="'+ i + '" value="'+ key +'">' + questionsAndAnswers[i].answers[key] + '</input>';
-	// 	}
-		
-
-	// 	//Close the answer Form tag
-	// 	html += '</form>';
-
-
-	// 	//Last thing to close out the question div.
-	// 	html += '</div>';
-	// }
-
-	for(var i=0; i<questionsAndAnswers.length;i++){
-		
-		// if(i=0){
-		// 	// Add a space before he first question so not touching the header
-		// 	html += '<p></p>'
-		// }
+	
+	// Actually builds the question cards
+	//for(var i=0; i<questionsAndAnswers.length;i++){
+	for(var i=0; i<randomizedQuestionArray.length;i++){
+		//Enhacement:  Re-write below using jQuery instead of appending to html string
 
 		//New question card
 		html += '<div class="card border-primary" id="questionCard'+ i +'" >';
@@ -209,7 +161,7 @@ function displayQuestionsAndAnswers(){
 		html += '<div class="card">';		
 		html += '<div class="card-body">';
 
-		// build the answer radio buttons
+		// Build the answer radio buttons by pulling the correct text and answer from the question objects
 		for(var key in questionsAndAnswers[randomizedQuestionArray[i]].answers){
 			
 			html += '<input class="question' + i +'Answer" type="radio" name="'+ i + '" value="'+ key +'">' + questionsAndAnswers[randomizedQuestionArray[i]].answers[key] + '</input><br>';
@@ -224,7 +176,7 @@ function displayQuestionsAndAnswers(){
 
 	}
 
-	// Append the html sting built above.
+	// Append the html sting built above and display the question cards built above.
 	$("#questionHolder").append(html);
 }
 
@@ -234,7 +186,7 @@ function resetGame(){
 	displayQuestionsAndAnswers();
 	//start Timers
 	clearTimeout(intervalID);
-	timeRemaining = 3000;
+	timeRemaining = 30;
 	clockRunning = true;
 	intervalID = setInterval(countDown, 1000);
 	//windowTimeout = setTimeout(endGame, 30000);
@@ -267,13 +219,14 @@ function endGame(){
 		}
 	}
 	alert("You got " + correctAnswerCount + " correct!");
-	alert("Answers marked in red are incorrect.  Correct answers are marked with Green.  Click Reset Game Button to play again. ");
+	alert("Red questions are incorrect. Green are correct.  Click Reset Game Button to play again with random questions. ");
 	//resetGame();
 }
 
-
+//  Kicks off the initial game
 $("#startGameButton").on("click", resetGame);
 
+//  Fisher-Yates (aka Knuth) Shuffle algorithm 
 function shuffle(array) {
   var currentIndex = array.length, temporaryValue, randomIndex ;
 
@@ -292,5 +245,3 @@ function shuffle(array) {
 
   return array;
 }
-
-//displayQuestionsAndAnswers();
