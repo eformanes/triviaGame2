@@ -118,9 +118,9 @@ function countDown(){
 $(document).on('change', 'input', function() {
 
 	// Console logs below were for testing values that were returned
-	// console.log("Input clicked!");
-	// console.log(this.name);
-	// console.log(this.value);
+	 console.log("Input clicked!");
+	 console.log(this.name);
+	 console.log(this.value);
 
 	//var currentAnswerIndex = parseInt(this.name);
 	
@@ -149,6 +149,8 @@ function displayQuestionsAndAnswers(){
 
 	//Shuffle the ordered array
 	shuffle(randomizedQuestionArray);
+
+
 
 	
 	//Create a string that will be built and then appended too.
@@ -196,7 +198,7 @@ function displayQuestionsAndAnswers(){
 		//Question Text row
 		html += '<div class="row">';
 		//Question Text content
-		html += '<div class="col"><p>' + questionsAndAnswers[i].question  +'</p></div>';
+		html += '<div class="col"><p>' + questionsAndAnswers[randomizedQuestionArray[i]].question  +'</p></div>';
 		// Close out question Text Row
 		html += '</div>';
 		
@@ -208,9 +210,9 @@ function displayQuestionsAndAnswers(){
 		html += '<div class="card-body">';
 
 		// build the answer radio buttons
-		for(var key in questionsAndAnswers[i].answers){
+		for(var key in questionsAndAnswers[randomizedQuestionArray[i]].answers){
 			
-			html += '<input class="question' + i +'Answer" type="radio" name="'+ i + '" value="'+ key +'">' + questionsAndAnswers[i].answers[key] + '</input><br>';
+			html += '<input class="question' + i +'Answer" type="radio" name="'+ i + '" value="'+ key +'">' + questionsAndAnswers[randomizedQuestionArray[i]].answers[key] + '</input><br>';
 		}
 
 		// Close out the card body div and remaining 6 divs
@@ -232,7 +234,7 @@ function resetGame(){
 	displayQuestionsAndAnswers();
 	//start Timers
 	clearTimeout(intervalID);
-	timeRemaining = 30;
+	timeRemaining = 3000;
 	clockRunning = true;
 	intervalID = setInterval(countDown, 1000);
 	//windowTimeout = setTimeout(endGame, 30000);
@@ -251,7 +253,8 @@ function endGame(){
 
 	var correctAnswerCount = 0;
 	for(var i=0;i < questionsAndAnswers.length ;i++){
-		if (questionsAndAnswers[i].correctAnswer === answers[i]) {
+		//if (questionsAndAnswers[i].correctAnswer === answers[i]) {
+		if (questionsAndAnswers[randomizedQuestionArray[i]].correctAnswer === answers[i]) {
 			correctAnswerCount++;
 			//Make background header and border of correct question cards Green
 			$("#question"+i).addClass("bg-success");
