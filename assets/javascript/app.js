@@ -181,6 +181,9 @@ function displayQuestionsAndAnswers(){
 }
 
 function resetGame(){
+	
+	$('#endGameBtn').show();
+	$('#resetGameBtn').hide();
 	$("#questionHolder").html('');
 	answers = [];
 	displayQuestionsAndAnswers();
@@ -202,6 +205,12 @@ function endGame(){
 	clearTimeout(intervalID);
 	timeRemaining = 0;
 	$("#timeRemaining").html(timeRemaining);
+
+	// Hide the End Game Button
+	$('#endGameBtn').hide();
+
+	// Show the Reset Game Button
+	$('#resetGameBtn').show();
 
 	var correctAnswerCount = 0;
 	for(var i=0;i < questionsAndAnswers.length ;i++){
